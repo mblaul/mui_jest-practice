@@ -1,24 +1,38 @@
 import React from 'react';
+import { shallow, mount } from 'enzyme';
 import { createShallow, createMount } from '@material-ui/core/test-utils/';
 
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import theme from '../constants/theme';
+import { withTheme, createTree } from '../helpers/helpers';
 
 import Landing from '../components/landing/Landing';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 describe('<Landing />', () => {
-  const withTheme = Componenet => {
-    return <MuiThemeProvider theme={theme}>{Componenet}</MuiThemeProvider>;
-  };
-
+  let shallow;
+  let shallowWrapper;
+  let mount;
+  let mountWrapper;
   let wrapper;
-  wrapper = createShallow(withTheme(Landing));
 
-  // beforeAll(() => {
+  beforeAll(() => {
+    shallow = createShallow();
+    shallowWrapper = shallow(withTheme(<Landing />));
 
-  // });
+    mount = createMount();
+    mountWrapper = mount(withTheme(<Landing />));
+  });
 
-  it('renders', () => {
-    console.log(wrapper.debug());
+  it('renders without crashing', () => {
+    shallow(withTheme(<Landing />));
+  });
+
+  it('has a Paper element', () => {
+    expect(mountWrapper.containsMatchingElement(Paper)).toEqual(true);
+  });
+
+  it('has a Typography element', () => {
+    expect(createTree(mountWrapper)).toMatchSnapshot();
+    expect(mountWrapper.containsMatchingElement(Typography)).toEqual(true);
   });
 });
